@@ -95,6 +95,23 @@ class TicTacToeGame:
         self._has_winner = False
         self.winner_combo = []
 
+    def reset_game(self):
+        """Reset the game state to play again."""
+        for row, row_content in enumerate(self._current_moves):
+            for col, _ in enumerate(row_content):
+                row_content[col] = Move(row, col)
+        self._has_winner = False
+        self.winner_combo = []
+
+    def reset_board(self):
+        """Reset the game's board to play again."""
+        self._game.reset_game()
+        self._update_display(msg="Ready?")
+        for button in self._cells.key():
+            button.config(highlightbackground="lightblue")
+            button.config(text="")
+            button.config(fg="black")
+
 
 class TicTacToeBoard(tk.Tk):
     def __init__(self, game):
@@ -186,6 +203,18 @@ class TicTacToeBoard(tk.Tk):
             button.config(highlightbackground="lightblue")
             button.config(text="")
             button.config(fg="black")
+
+    def _create_menu(self):
+        menu_bar = tk.Menu(master=self)
+        self.config(menu=menu_bar)
+        file_menu = tk.Menu(master=menu_bar)
+        file_menu.add_command(
+            label="Play Again",
+            command=self.reset_board
+        )
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=quit)
+        menu_bar.add_cascade(label="File", menu=file_menu)
 
 
 def main():
